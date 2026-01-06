@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de Currículos Profissionais 2025</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .resume-preview {
+            background: white;
+            box-shadow: 0 0 30px rgba(0,0,0,0.15);
+            min-height: 1000px;
+        }
+        .style-card {
+            transition: all 0.3s;
+            cursor: pointer;
+            border: 2px solid #e5e7eb;
+        }
+        .style-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+        }
+        .style-card.selected {
+            border: 3px solid #2563eb;
+            box-shadow: 0 10px 30px rgba(37, 99, 235, 0.3);
+        }
+        @media print {
+            .no-print { display: none; }
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-slate-50 to-blue-50 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <h1 class="text-5xl font-bold text-gray-800 mb-2">💼 Gerador de Currículos Premium</h1>
+            <p class="text-gray-600 text-lg">Currículos Profissionais de Alto Impacto | Padrão 2025</p>
+        </div>
+
+        <!-- Step 1: Choose Style -->
+        <div id="step1" class="mb-12">
+            <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">Escolha seu Estilo Premium</h2>
+            <div class="grid md:grid-cols-3 lg:grid-cols-5 gap-6">
+                <!-- Executive Premium -->
+                <div class="style-card bg-white p-6 rounded-xl" onclick="selectStyle('executive')">
+                    <div class="text-center">
+                        <div class="w-full h-32 bg-gradient-to-br from-teal-600 to-teal-800 rounded-lg mb-4 flex items-center justify-center">
+                            <div class="text-white text-sm font-bold">BARRA LATERAL</div>
+                        </div>
+                        <h3 class="font-bold text-lg mb-2 text-teal-700">Executive Premium</h3>
+                        <p class="text-xs text-gray-600">Layout profissional com barra lateral. Ideal para cargos de liderança</p>
+                    </div>
+                </div>
+
+                <!-- Corporate Elite -->
+                <div class="style-card bg-white p-6 rounded-xl" onclick="selectStyle('corporate')">
+                    <div class="text-center">
+                        <div class="w-full h-32 bg-gradient-to-br from-slate-700 to-slate-900 rounded-lg mb-4 flex items-center justify-center">
+                            <div class="text-white text-sm font-bold">ELEGANTE</div>
+                        </div>
+                        <h3 class="font-bold text-lg mb-2 text-slate-700">Corporate Elite</h3>
+                        <p class="text-xs text-gray-600">Design corporativo sofisticado. Perfeito para alta gestão</p>
+                    </div>
+                </div>
+
+                <!-- Tech Professional -->
+                <div class="style-card bg-white p-6 rounded-xl" onclick="selectStyle('tech')">
+                    <div class="text-center">
+                        <div class="w-full h-32 bg-gradient-to-br from-indigo-600 to-indigo-800 rounded-lg mb-4 flex items-center justify-center">
+                            <div class="text-white text-sm font-bold">MODERNO</div>
+                        </div>
+                        <h3 class="font-bold text-lg mb-2 text-indigo-700">Tech Professional</h3>
+                        <p class="text-xs text-gray-600">Clean e moderno. Excelente para TI e tecnologia</p>
+                    </div>
+                </div>
+
+                <!-- Business Premium -->
+                <div class="style-card bg-white p-6 rounded-xl" onclick="selectStyle('business')">
+                    <div class="text-center">
+                        <div class="w-full h-32 bg-gradient-to-br from-blue-700 to-blue-900 rounded-lg mb-4 flex items-center justify-center">
+                            <div class="text-white text-sm font-bold">PREMIUM</div>
+                        </div>
+                        <h3 class="font-bold text-lg mb-2 text-blue-700">Business Premium</h3>
+                        <p class="text-xs text-gray-600">Formato empresarial de alto nível. Para executivos</p>
+                    </div>
+                </div>
+
+                <!-- Minimal Elegant -->
+                <div class="style-card bg-white p-6 rounded-xl" onclick="selectStyle('minimal')">
+                    <div class="text-center">
+                        <div class="w-full h-32 bg-gradient-to-br from-gray-700 to-gray-900 rounded-lg mb-4 flex items-center justify-center">
+                            <div class="text-white text-sm font-bold">MINIMALISTA</div>
+                        </div>
+                        <h3 class="font-bold text-lg mb-2 text-gray-700">Minimal Elegant</h3>
+                        <p class="text-xs text-gray-600">Sofisticação minimalista. Universal e atemporal</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 2: Form -->
+        <div id="step2" class="hidden grid md:grid-cols-2 gap-8">
+            <!-- Form Section -->
+            <div class="bg-white p-8 rounded-xl shadow-2xl">
+                <h2 class="text-3xl font-bold text-gray-800 mb-6">Preencha suas Informações</h2>
+                
+                <!-- Photo Upload -->
+                <div class="mb-6 bg-blue-50 p-4 rounded-lg border-2 border-blue-200">
+                    <label class="block text-sm font-bold text-gray-700 mb-2">📸 Foto Profissional (Recomendado)</label>
+                    <input type="file" id="photoUpload" accept="image/*" onchange="handlePhotoUpload(event)"
+                           class="w-full p-3 border-2 rounded-lg focus:border-blue-500">
+                    <p class="text-xs text-gray-600 mt-2">✨ Currículos com foto profissional têm 40% mais visualizações</p>
+                </div>
+
+                <!-- Personal Info -->
+                <div class="mb-6">
+                    <h3 class="font-bold text-xl mb-4 text-blue-600 flex items-center">
+                        <span class="mr-2">👤</span> Dados Pessoais
+                    </h3>
+                    <input type="text" id="fullName" placeholder="Nome Completo *" oninput="updatePreview()"
+                           class="w-full p-3 border-2 rounded-lg mb-3 focus:border-blue-500">
+                    <input type="text" id="title" placeholder="Cargo/Título Profissional *" oninput="updatePreview()"
+                           class="w-full p-3 border-2 rounded-lg mb-3 focus:border-blue-500">
+                    <input type="email" id="email" placeholder="E-mail Profissional *" oninput="updatePreview()"
+                           class="w-full p-3 border-2 rounded-lg mb-3 focus:border-blue-500">
+                    <input type="tel" id="phone" placeholder="Telefone/WhatsApp *" oninput="updatePreview()"
+                           class="w-full p-3 border-2 rounded-lg mb-3 focus:border-blue-500">
+                    <input type="text" id="location" placeholder="Cidade, Estado" oninput="updatePreview()"
+                           class="w-full p-3 border-2 rounded-lg mb-3 focus:border-blue-500">
+                    <input type="url" id="linkedin" placeholder="LinkedIn (Essencial em 2025)" oninput="updatePreview()"
+                           class="w-full p-3 border-2 rounded-lg mb-3 focus:border-blue-500">
+                    <input type="url" id="portfolio" placeholder="Portfólio/GitHub (Opcional)" oninput="updatePreview()"
+                           class="w-full p-3 border-2 rounded-lg focus:border-blue-500">
+                </div>
+
+                <!-- Professional Summary -->
+                <div class="mb-6">
+                    <h3 class="font-bold text-xl mb-4 text-blue-600 flex items-center">
+                        <span class="mr-2">💡</span> Resumo Profissional
+                    </h3>
+                    <textarea id="summary" placeholder="Descreva sua experiência e objetivos com FOCO EM RESULTADOS. Ex: 'Profissional com 8+ anos aumentando receita em média 35% ao ano através de estratégias data-driven...'" 
+                              oninput="updatePreview()" rows="4" class="w-full p-3 border-2 rounded-lg focus:border-blue-500"></textarea>
+                    <p class="text-xs text-blue-600 mt-2 font-semibold">⚡ Dica: Use números, percentuais e conquistas mensuráveis!</p>
+                </div>
+
+                <!-- Experience -->
+                <div class="mb-6">
+                    <h3 class="font-bold text-xl mb-4 text-blue-600 flex items-center">
+                        <span class="mr-2">💼</span> Experiência Profissional
+                    </h3>
+                    <div id="experienceContainer"></div>
+                    <button onclick="addExperience()" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 mt-3 font-semibold transition">
+                        + Adicionar Experiência
+                    </button>
+                </div>
+
+                <!-- Education -->
+                <div class="mb-6">
+                    <h3 class="font-bold text-xl mb-4 text-blue-600 flex items-center">
+                        <span class="mr-2">🎓</span> Formação Acadêmica
+                    </h3>
+                    <div id="educationContainer"></div>
+                    <button onclick="addEducation()" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 mt-3 font-semibold transition">
+                        + Adicionar Formação
+                    </button>
+                </div>
+
+                <!-- Skills -->
+                <div class="mb-6">
+                    <h3 class="font-bold text-xl mb-4 text-blue-600 flex items-center">
+                        <span class="mr-2">⚡</span> Competências Técnicas
+                    </h3>
+                    <input type="text" id="skills" placeholder="Excel Avançado, Power BI, Gestão de Projetos, SQL, Liderança (separe por vírgula)" 
+                           oninput="updatePreview()" class="w-full p-3 border-2 rounded-lg focus:border-blue-500">
+                    <p class="text-xs text-gray-600 mt-2">Lista suas principais habilidades técnicas e comportamentais</p>
+                </div>
+
+                <!-- Certifications -->
+                <div class="mb-6">
+                    <h3 class="font-bold text-xl mb-4 text-blue-600 flex items-center">
+                        <span class="mr-2">🏆</span> Certificações
+                    </h3>
+                    <textarea id="certifications" placeholder="PMP - Project Management Professional (2024)&#10;Certificação Google Analytics (2023)&#10;Scrum Master Certified (2022)" 
+                              oninput="updatePreview()" rows="3" class="w-full p-3 border-2 rounded-lg focus:border-blue-500"></textarea>
+                </div>
+
+                <!-- Languages -->
+                <div class="mb-6">
+                    <h3 class="font-bold text-xl mb-4 text-blue-600 flex items-center">
+                        <span class="mr-2">🌍</span> Idiomas
+                    </h3>
+                    <input type="text" id="languages" placeholder="Português (Nativo), Inglês (Fluente), Espanhol (Intermediário)" 
+                           oninput="updatePreview()" class="w-full p-3 border-2 rounded-lg focus:border-blue-500">
+                </div>
+
+                <!-- Generate Button -->
+                <button onclick="generatePDF()" class="w-full bg-gradient-to-r from-green-600 to-green-700 text-white py-4 px-6 rounded-xl font-bold text-xl hover:from-green-700 hover:to-green-800 shadow-lg transform hover:scale-105 transition">
+                    🔥 GERAR CURRÍCULO EM PDF
+                </button>
+            </div>
+
+            <!-- Preview Section -->
+            <div class="sticky top-4">
+                <h2 class="text-3xl font-bold text-gray-800 mb-4 text-center">Preview em Tempo Real</h2>
+                <div id="resumePreview" class="resume-preview rounded-xl overflow-hidden"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentStyle = '';
+        let photoDataURL = '';
+        let experienceCount = 0;
+        let educationCount = 0;
+
+        function selectStyle(style) {
+            currentStyle = style;
+            document.querySelectorAll('.style-card').forEach(card => card.classList.remove('selected'));
+            event.target.closest('.style-card').classList.add('selected');
+            
+            document.getElementById('step2').classList.remove('hidden');
+            document.getElementById('step2').classList.add('grid');
+            
+            window.scrollTo({ top: document.getElementById('step2').offsetTop - 100, behavior: 'smooth' });
+            
+            if (experienceCount === 0) addExperience();
+            if (educationCount === 0) addEducation();
+            
+            updatePreview();
+        }
+
+        function handlePhotoUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    photoDataURL = e.target.result;
+                    updatePreview();
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function addExperience() {
+            experienceCount++;
+            const container = document.getElementById('experienceContainer');
+            const div = document.createElement('div');
+            div.className = 'mb-4 p-5 border-2 rounded-xl bg-gradient-to-r from-blue-50 to-indigo-50';
+            div.innerHTML = `
+                <div class="flex justify-between items-center mb-3">
+                    <span class="font-bold text-blue-700">Experiência ${experienceCount}</span>
+                    <button onclick="this.parentElement.parentElement.remove(); updatePreview();" class="text-red-500 hover:text-red-700 font-bold">✕</button>
+                </div>
+                <input type="text" id="expCompany${experienceCount}" placeholder="Nome da Empresa *" oninput="updatePreview()"
+                       class="w-full p-3 border-2 rounded-lg mb-3">
+                <input type="text" id="expPosition${experienceCount}" placeholder="Cargo/Função *" oninput="updatePreview()"
+                       class="w-full p-3 border-2 rounded-lg mb-3">
+                <div class="grid grid-cols-2 gap-3 mb-3">
+                    <input type="text" id="expStart${experienceCount}" placeholder="Mês/Ano Início" oninput="updatePreview()"
+                           class="w-full p-3 border-2 rounded-lg">
+                    <input type="text" id="expEnd${experienceCount}" placeholder="Mês/Ano Fim (ou 'Atual')" oninput="updatePreview()"
+                           class="w-full p-3 border-2 rounded-lg">
+                </div>
+                <textarea id="expDesc${experienceCount}" placeholder="• Descreva suas CONQUISTAS e RESULTADOS (não apenas tarefas)&#10;• Use NÚMEROS: 'Aumentei vendas em 45%', 'Reduzi custos em R$ 200k'&#10;• Foque no IMPACTO das suas ações&#10;• Seja específico e mensurável" 
+                          oninput="updatePreview()" rows="4" class="w-full p-3 border-2 rounded-lg"></textarea>
+            `;
+            container.appendChild(div);
+        }
+
+        function addEducation() {
+            educationCount++;
+            const container = document.getElementById('educationContainer');
+            const div = document.createElement('div');
+            div.className = 'mb-4 p-5 border-2 rounded-xl bg-gradient-to-r from-green-50 to-teal-50';
+            div.innerHTML = `
+                <div class="flex justify-between items-center mb-3">
+                    <span class="font-bold text-green-700">Formação ${educationCount}</span>
+                    <button onclick="this.parentElement.parentElement.remove(); updatePreview();" class="text-red-500 hover:text-red-700 font-bold">✕</button>
+                </div>
+                <input type="text" id="eduInstitution${educationCount}" placeholder="Nome da Instituição *" oninput="updatePreview()"
+                       class="w-full p-3 border-2 rounded-lg mb-3">
+                <input type="text" id="eduDegree${educationCount}" placeholder="Curso/Grau (ex: MBA em Gestão, Bacharel em Engenharia) *" oninput="updatePreview()"
+                       class="w-full p-3 border-2 rounded-lg mb-3">
+                <div class="grid grid-cols-2 gap-3">
+                    <input type="text" id="eduStart${educationCount}" placeholder="Ano Início" oninput="updatePreview()"
+                           class="w-full p-3 border-2 rounded-lg">
+                    <input type="text" id="eduEnd${educationCount}" placeholder="Ano Conclusão" oninput="updatePreview()"
+                           class="w-full p-3 border-2 rounded-lg">
+                </div>
+            `;
+            container.appendChild(div);
+        }
+
+        function updatePreview() {
+            const preview = document.getElementById('resumePreview');
+            const data = collectFormData();
+            
+            let html = '';
+            
+            switch(currentStyle) {
+                case 'executive':
+                    html = generateExecutiveStyle(data);
+                    break;
+                case 'corporate':
+                    html = generateCorporateStyle(data);
+                    break;
+                case 'tech':
+                    html = generateTechStyle(data);
+                    break;
+                case 'business':
+                    html = generateBusinessStyle(data);
+                    break;
+                case 'minimal':
+                    html = generateMinimalStyle(data);
+                    break;
+            }
+            
+            preview.innerHTML = html;
+        }
+
+        function collectFormData() {
+            const data = {
+                photo: photoDataURL,
+                fullName: document.getElementById('fullName')?.value || '',
+                title: document.getElementById('title')?.value || '',
+                email: document.getElementById('email')?.value || '',
+                phone: document.getElementById('phone')?.value || '',
+                location: document.getElementById('location')?.value || '',
+                linkedin: document.getElementById('linkedin')?.value || '',
+                portfolio: document.getElementById('portfolio')?.value || '',
+                summary: document.getElementById('summary')?.value || '',
+                skills: document.getElementById('skills')?.value || '',
+                certifications: document.getElementById('certifications')?.value || '',
+                languages: document.getElementById('languages')?.value || '',
+                experiences: [],
+                education: []
+            };
+
+            for (let i = 1; i <= experienceCount; i++) {
+                const company = document.getElementById(`expCompany${i}`)?.value;
+                if (company) {
+                    data.experiences.push({
+                        company,
+                        position: document.getElementById(`expPosition${i}`)?.value || '',
+                        start: document.getElementById(`expStart${i}`)?.value || '',
+                        end: document.getElementById(`expEnd${i}`)?.value || '',
+                        description: document.getElementById(`expDesc${i}`)?.value || ''
+                    });
+                }
+            }
+
+            for (let i = 1; i <= educationCount; i++) {
+                const institution = document.getElementById(`eduInstitution${i}`)?.value;
+                if (institution) {
+                    data.education.push({
+                        institution,
+                        degree: document.getElementById(`eduDegree${i}`)?.value || '',
+                        start: document.getElementById(`eduStart${i}`)?.value || '',
+                        end: document.getElementById(`eduEnd${i}`)?.value || ''
+                    });
+                }
+            }
+
+            return data;
+        }
+
+        function generateExecutiveStyle(data) {
+            return `
+                <div style="font-family: 'Segoe UI', Arial, sans-serif; display: flex; min-height: 1000px;">
+                    <div style="width: 35%; background: linear-gradient(180deg, #0d9488 0%, #0f766e 100%); color: white; padding: 40px 30px;">
+                        ${data.photo ? `<div style="text-align: center; margin-bottom: 30px;"><img src="${data.photo}" style="width: 160px; height: 160px; border-radius: 50%; object-fit: cover; border: 5px solid white; box-shadow: 0 8px 20px rgba(0,0,0,0.3);"></div>` : ''}
+                        
+                        <div style="margin-bottom: 35px;">
+                            <h3 style="font-size: 16px; font-weight: bold; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid rgba(255,255,255,0.3); text-transform: uppercase; letter-spacing: 1px;">Contato</h3>
+                            ${data.email ? `<div style="margin-bottom: 12px; font-size: 13px; line-height: 1.6;"><strong>Email:</strong><br>${data.email}</div>` : ''}
+                            ${data.phone ? `<div style="margin-bottom: 12px; font-size: 13px; line-height: 1.6;"><strong>Telefone:</strong><br>${data.phone}</div>` : ''}
+                            ${data.location ? `<div style="margin-bottom: 12px; font-size: 13px; line-height: 1.6;"><strong>Localização:</strong><br>${data.location}</div>` : ''}
+                            ${data.linkedin ? `<div style="margin-bottom: 12px; font-size: 13px; line-height: 1.6;"><strong>LinkedIn:</strong><br>Perfil Disponível</div>` : ''}
+                        </div>
+
+                        ${data.skills ? `<div style="margin-bottom: 35px;"><h3 style="font-size: 16px; font-weight: bold; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid rgba(255,255,255,0.3); text-transform: uppercase; letter-spacing: 1px;">Competências</h3>${data.skills.split(',').map(skill => `<div style="margin-bottom: 10px;"><div style="font-size: 13px; margin-bottom: 5px; font-weight: 500;">${skill.trim()}</div><div style="background: rgba(255,255,255,0.3); height: 6px; border-radius: 3px;"><div style="background: white; width: 85%; height: 100%; border-radius: 3px;"></div></div></div>`).join('')}</div>` : ''}
+
+                        ${data.languages ? `<div style="margin-bottom: 35px;"><h3 style="font-size: 16px; font-weight: bold; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid rgba(255,255,255,0.3); text-transform: uppercase; letter-spacing: 1px;">Idiomas</h3><p style="font-size: 13px; line-height: 1.8;">${data.languages}</p></div>` : ''}
+
+                        ${data.certifications ? `<div><h3 style="font-size: 16px; font-weight: bold; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid rgba(255,255,255,0.3); text-transform: uppercase; letter-spacing: 1px;">Certificações</h3>${data.certifications.split('\n').map(cert => cert.trim() ? `<div style="margin-bottom: 10px; font-size: 12px; line-height: 1.6;">✓ ${cert}</div>` : '').join('')}</div>` : ''}
+                    </div>
+
+                    <div style="width: 65%; padding: 50px 40px; background: #ffffff;">
+                        <h1 style="font-size: 42px; font-weight: 800; color: #0d9488; margin: 0 0 8px 0; text-transform: uppercase; letter-spacing: 1px;">${data.fullName || 'SEU NOME'}</h1>
+                        <h2 style="font-size: 20px; color: #64748b; margin: 0 0 30px 0; font-weight: 400;">${data.title || 'Título Profissional'}</h2>
+
+                        ${data.summary ? `<div style="margin-bottom: 35px;"><h3 style="font-size: 18px; font-weight: 700; color: #0d9488; margin-bottom: 12px; text-transform: uppercase;">Perfil Profissional</h3><div style="height: 3px; width: 60px; background: #0d9488; margin-bottom: 15px;"></div><p style="font-size: 14px; line-height: 1.8; color: #475569; text-align: justify;">${data.summary}</p></div>` : ''}
+
+                        ${data.experiences.length > 0 ? `<div style="margin-bottom: 35px;"><h3 style="font-size: 18px; font-weight: 700; color: #0d9488; margin-bottom: 12px; text-transform: uppercase;">Experiência Profissional</h3><div style="height: 3px; width: 60px; background: #0d9488; margin-bottom: 20px;"></div>${data.experiences.map(exp => `<div style="margin-bottom: 25px; padding-left: 20px; border-left: 3px solid #99f6e4;"><div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 5px;"><strong style="font-size: 16px; color: #1e293b;">${exp.position}</strong><span style="font-size: 13px; color: #64748b; font-weight: 500;">${exp.start} - ${exp.end}</span></div><div style="color: #0d9488; font-weight: 600; font-size: 14px; margin-bottom: 10px;">${exp.company}</div><p style="font-size: 13px; line-height: 1.7; color: #475569; margin: 0; text-align: justify; white-space: pre-line;">${exp.description}</p></div>`).join('')}</div>` : ''}
+
+                        ${data.education.length > 0 ? `<div><h3 style="font-size: 18px; font-weight: 700; color: #0d9488; margin-bottom: 12px; text-transform: uppercase;">Formação Acadêmica</h3><div style="height: 3px; width: 60px; background: #0d9488; margin-bottom: 20px;"></div>${data.education.map(edu => `<div style="margin-bottom: 20px; padding-left: 20px; border-left: 3px solid #99f6e4;"><strong style="font-size: 15px; color: #1e293b; display: block; margin-bottom: 4px;">${edu.degree}</strong><div style="color: #0d9488; font-weight: 600; font-size: 13px; margin-bottom: 3px;">${edu.institution}</div><span style="font-size: 13px; color: #64748b;">${edu.start} - ${edu.end}</span></div>`).join('')}</div>` : ''}
+                    </div>
+                </div>
+            `;
+        }
+
+        function generateCorporateStyle(data) {
+            return `
+                <div style="font-family: 'Helvetica Neue', Arial, sans-serif; background: #f8fafc; min-height: 1000px;">
+                    <div style="background: linear-gradient(135deg, #1e293b 0%, #334155 100%); color: white; padding: 50px 60px;">
+                        <div style="max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center;">
+                            <div style="flex: 1;">
+                                <h1 style="font-size: 46px; font-weight: 800; margin: 0 0 10px 0; letter-spacing: -1px;">${data.fullName || 'SEU NOME'}</h1>
+                                <h2 style="font-size: 22px; margin: 0 0 25px 0; font-weight: 300; opacity: 0.9;">${data.title || 'Título Profissional'}</h2>
+                                <div style="display: flex; gap: 20px; font-size: 14px; flex-wrap: wrap;">
+                                    ${data.email ? `<span>✉ ${data.email}</span>` : ''}
+                                    ${data.phone ? `<span>📱 ${data.phone}</span>` : ''}
+                                    ${data.location ? `<span>📍 ${data.location}</span>` : ''}
+                                </div>
+                            </div>
+                            ${data.photo ? `<img src="${data.photo}" style="width: 140px; height: 140px; border-radius: 10px; object-fit: cover; border: 4px solid white; box-shadow: 0 10px 30px rgba(0,0,0,0.4);">` : ''}
+                        </div>
+                    </div>
+
+                    <div style="max-width: 1100px; margin: 0 auto; padding: 50px 60px;">
+                        ${data.summary ? `<div style="background: white; padding: 35px; margin-bottom: 30px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); border-top: 4px solid #1e293b;"><h3 style="font-size: 20px; font-weight: 700; color: #1e293b; margin: 0 0 15px 0; text-transform: uppercase;">SUMÁRIO EXECUTIVO</h3><p style="font-size: 15px; line-height: 1.9; color: #334155; margin: 0; text-align: justify;">${data.summary}</p></div>` : ''}
+
+                        ${data.experiences.length > 0 ? `<div style="background: white; padding: 35px; margin-bottom: 30px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);"><h3 style="font-size: 20px; font-weight: 700; color: #1e293b; margin: 0 0 25px 0; text-transform: uppercase; border-bottom: 3px solid #e2e8f0; padding-bottom: 12px;">TRAJETÓRIA PROFISSIONAL</h3>${data.experiences.map((exp, i) => `<div style="margin-bottom: ${i < data.experiences.length - 1 ? '30px' : '0'}; padding-bottom: ${i < data.experiences.length - 1 ? '30px' : '0'}; ${i < data.experiences.length - 1 ? 'border-bottom: 1px solid #e2e8f0;' : ''}"><div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px;"><strong style="font-size: 18px; color: #0f172a;">${exp.position}</strong><span style="background: #f1f5f9; color: #475569; padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 600;">${exp.start} - ${exp.end}</span></div><div style="color: #1e293b; font-weight: 700; font-size: 15px; margin-bottom: 12px;">${exp.company}</div><p style="font-size: 14px; line-height: 1.8; color: #475569; margin: 0; text-align: justify; white-space: pre-line;">${exp.description}</p></div>`).join('')}</div>` : ''}
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+                            ${data.education.length > 0 ? `<div style="background: white; padding: 35px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);"><h3 style="font-size: 18px; font-weight: 700; color: #1e293b; margin: 0 0 20px 0; text-transform: uppercase;">FORMAÇÃO</h3>${data.education.map(edu => `<div style="margin-bottom: 20px;"><strong style="font-size: 15px; color: #0f172a; display: block; margin-bottom: 6px;">${edu.degree}</strong><div style="color: #1e293b; font-weight: 600; font-size: 14px; margin-bottom: 4px;">${edu.institution}</div><span style="font-size: 13px; color: #64748b;">${edu.start} - ${edu.end}</span></div>`).join('')}</div>` : ''}
+
+                            <div>
+                                ${data.skills ? `<div style="background: white; padding: 35px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 30px;"><h3 style="font-size: 18px; font-weight: 700; color: #1e293b; margin: 0 0 20px 0; text-transform: uppercase;">COMPETÊNCIAS</h3><div style="display: flex; flex-wrap: wrap; gap: 10px;">${data.skills.split(',').map(skill => `<span style="background: #f1f5f9; color: #334155; padding: 8px 16px; border-radius: 6px; font-size: 13px; font-weight: 600; border: 1px solid #e2e8f0;">${skill.trim()}</span>`).join('')}</div></div>` : ''}
+                                ${data.languages ? `<div style="background: white; padding: 35px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);"><h3 style="font-size: 18px; font-weight: 700; color: #1e293b; margin: 0 0 15px 0; text-transform: uppercase;">IDIOMAS</h3><p style="font-size: 14px; line-height: 1.8; color: #475569; margin: 0;">${data.languages}</p></div>` : ''}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function generateTechStyle(data) {
+            return `
+                <div style="font-family: 'Inter', sans-serif; background: white; min-height: 1000px; display: flex;">
+                    <div style="width: 30%; background: linear-gradient(180deg, #4f46e5 0%, #4338ca 100%); padding: 45px 30px; color: white;">
+                        ${data.photo ? `<div style="text-align: center; margin-bottom: 35px;"><img src="${data.photo}" style="width: 150px; height: 150px; border-radius: 15px; object-fit: cover; border: 4px solid rgba(255,255,255,0.3); box-shadow: 0 8px 25px rgba(0,0,0,0.3);"></div>` : ''}
+
+                        <div style="margin-bottom: 40px;">
+                            <h3 style="font-size: 14px; font-weight: 700; margin-bottom: 18px; text-transform: uppercase; letter-spacing: 2px; opacity: 0.8;">CONTATO</h3>
+                            ${data.email ? `<div style="margin-bottom: 14px; font-size: 12px; line-height: 1.6; opacity: 0.95;"><div style="font-weight: 600; margin-bottom: 3px;">Email</div>${data.email}</div>` : ''}
+                            ${data.phone ? `<div style="margin-bottom: 14px; font-size: 12px; line-height: 1.6; opacity: 0.95;"><div style="font-weight: 600; margin-bottom: 3px;">Telefone</div>${data.phone}</div>` : ''}
+                            ${data.location ? `<div style="margin-bottom: 14px; font-size: 12px; line-height: 1.6; opacity: 0.95;"><div style="font-weight: 600; margin-bottom: 3px;">Localização</div>${data.location}</div>` : ''}
+                        </div>
+
+                        ${data.skills ? `<div style="margin-bottom: 40px;"><h3 style="font-size: 14px; font-weight: 700; margin-bottom: 18px; text-transform: uppercase; letter-spacing: 2px; opacity: 0.8;">SKILLS</h3>${data.skills.split(',').map(skill => `<div style="background: rgba(255,255,255,0.15); padding: 10px 14px; margin-bottom: 8px; border-radius: 6px; font-size: 12px; font-weight: 500;">${skill.trim()}</div>`).join('')}</div>` : ''}
+
+                        ${data.languages ? `<div style="margin-bottom: 40px;"><h3 style="font-size: 14px; font-weight: 700; margin-bottom: 18px; text-transform: uppercase; letter-spacing: 2px; opacity: 0.8;">IDIOMAS</h3><p style="font-size: 12px; line-height: 1.8; opacity: 0.95;">${data.languages}</p></div>` : ''}
+
+                        ${data.certifications ? `<div><h3 style="font-size: 14px; font-weight: 700; margin-bottom: 18px; text-transform: uppercase; letter-spacing: 2px; opacity: 0.8;">CERTIFICAÇÕES</h3>${data.certifications.split('\n').map(cert => cert.trim() ? `<div style="margin-bottom: 12px; font-size: 11px; line-height: 1.6; opacity: 0.95; padding-left: 15px; position: relative;"><span style="position: absolute; left: 0;">▸</span>${cert}</div>` : '').join('')}</div>` : ''}
+                    </div>
+
+                    <div style="width: 70%; padding: 50px 45px;">
+                        <div style="margin-bottom: 40px;">
+                            <h1 style="font-size: 44px; font-weight: 800; color: #1e293b; margin: 0 0 8px 0;">${data.fullName || 'SEU NOME'}</h1>
+                            <div style="font-size: 22px; color: #4f46e5; font-weight: 600; margin-bottom: 8px;">${data.title || 'Título Profissional'}</div>
+                            <div style="height: 4px; width: 80px; background: #4f46e5; border-radius: 2px;"></div>
+                        </div>
+
+                        ${data.summary ? `<div style="margin-bottom: 40px; padding: 25px; background: #f8fafc; border-radius: 10px; border-left: 4px solid #4f46e5;"><h3 style="font-size: 16px; font-weight: 700; color: #4f46e5; margin: 0 0 12px 0; text-transform: uppercase;">SOBRE</h3><p style="font-size: 14px; line-height: 1.9; color: #334155; margin: 0; text-align: justify;">${data.summary}</p></div>` : ''}
+
+                        ${data.experiences.length > 0 ? `<div style="margin-bottom: 40px;"><h3 style="font-size: 18px; font-weight: 700; color: #1e293b; margin: 0 0 25px 0; text-transform: uppercase;"><span style="color: #4f46e5;">// </span>EXPERIÊNCIA</h3>${data.experiences.map(exp => `<div style="margin-bottom: 30px; padding-left: 25px; border-left: 2px solid #e0e7ff; position: relative;"><div style="position: absolute; left: -6px; top: 5px; width: 10px; height: 10px; background: #4f46e5; border-radius: 50%;"></div><div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px;"><strong style="font-size: 17px; color: #0f172a;">${exp.position}</strong><code style="background: #f1f5f9; color: #4f46e5; padding: 4px 12px; border-radius: 4px; font-size: 11px; font-weight: 600;">${exp.start} → ${exp.end}</code></div><div style="color: #4f46e5; font-weight: 700; font-size: 14px; margin-bottom: 10px;">{${exp.company}}</div><p style="font-size: 13px; line-height: 1.8; color: #475569; margin: 0; text-align: justify; white-space: pre-line;">${exp.description}</p></div>`).join('')}</div>` : ''}
+
+                        ${data.education.length > 0 ? `<div><h3 style="font-size: 18px; font-weight: 700; color: #1e293b; margin: 0 0 25px 0; text-transform: uppercase;"><span style="color: #4f46e5;">// </span>EDUCAÇÃO</h3>${data.education.map(edu => `<div style="margin-bottom: 22px; padding: 20px; background: #f8fafc; border-radius: 8px; border-left: 3px solid #4f46e5;"><strong style="font-size: 16px; color: #0f172a; display: block; margin-bottom: 6px;">${edu.degree}</strong><div style="color: #4f46e5; font-weight: 600; font-size: 14px; margin-bottom: 4px;">${edu.institution}</div><span style="font-size: 13px; color: #64748b;">${edu.start} - ${edu.end}</span></div>`).join('')}</div>` : ''}
+                    </div>
+                </div>
+            `;
+        }
+
+        function generateBusinessStyle(data) {
+            return `
+                <div style="font-family: 'Georgia', serif; background: white; min-height: 1000px; padding: 60px;">
+                    <div style="max-width: 900px; margin: 0 auto; border: 3px solid #1e40af; padding: 50px;">
+                        <div style="text-align: center; border-bottom: 4px double #1e40af; padding-bottom: 30px; margin-bottom: 40px;">
+                            ${data.photo ? `<img src="${data.photo}" style="width: 130px; height: 130px; border-radius: 50%; object-fit: cover; border: 4px soli
